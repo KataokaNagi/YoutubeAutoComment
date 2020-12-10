@@ -1,3 +1,5 @@
+package com.github.kataokanagi;
+
 import java.io.*;
 
 // WikipediaキーワードAPIのテスト //! を改良

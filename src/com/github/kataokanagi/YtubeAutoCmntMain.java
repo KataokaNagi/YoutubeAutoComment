@@ -1,3 +1,5 @@
+package com.github.kataokanagi;
+
 import java.util.*;
 
 public class YtubeAutoCmntMain {
