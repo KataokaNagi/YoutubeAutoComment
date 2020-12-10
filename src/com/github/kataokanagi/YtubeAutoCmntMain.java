@@ -6,7 +6,12 @@ public class YtubeAutoCmntMain {
 
   // ! @see
   // https://console.developers.google.com/apis/credentials?authuser=2&project=kodo1a&supportedpurview=project
-  static final String API_KEY = "AIzaSyDAYlOyOmte9cEew4T19VkHkKQXF86uJL0";
+
+  /**************************************************/
+  // Put API key by hand after making branch
+  // and put away before PR
+  static final String API_KEY = "";
+  /**************************************************/
   static final String VIDEO_ID = "F6Z8OWJD5IE"; // ! After "watch?v=" in video URL
 
   public YtubeAutoCmntMain() {
