@@ -1,0 +1,634 @@
+' @file   class_diagram.pu
+' @auther AL18036 Kataoka Nagi
+' @note   ソフトウェア工学2 UMLレポート
+' @note   クラス図出力用のファイル
+' @note   java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe .\class_diagram.pu
+' @see    https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+@startuml
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+header 
+SoftwareKougaku2 UML report
+Class diagram of opencsv
+2020-11-25 AL18036 Kataoka Nagi
+end header
+
+title
+**Class Diagram**
+opencsv
+end title
+
+' class def
+' @see https://qiita.com/KeithYokoma/items/ee21fec6a3ebb5d1e9a8
+
+package java.io {
+'   class IOException
+'   class Reader
+  class Closeable
+'   class PrintWriter
+'   class Writer
+'   class BufferedReader
+}
+
+' package java.beans {
+'   class Introspector
+'   class IntrospectionException
+'   class PropertyEditor
+'   class PropertyEditorManager
+'   class PropertyDescriptor
+'   class BeanInfo
+' }
+
+' package java.lang.reflect {
+'   class InvocationTargetException
+' }
+
+' package java.util {
+'   class List
+'   class ArrayList
+'   class Map
+'   class HashMap
+' }
+
+' package java.sql {
+'   class ResultSet
+'   class SQLException
+' }
+
+' package java.math {
+'   class BigDecimal
+' }
+
+' package java.text {
+'   class SimpleDateFormat
+' }
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+package au.com.bytecode.opencsv {
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  package au.com.bytecode.opencsv.bean {
+
+    ' public
+    interface MappingStrategy {
+        + {abstract} findDescriptor(col: int): PropertyDescriptor
+        + {abstract} createBean(): T
+        + captureHeader(reader: CSVReader): void
+    }
+    ' MappingStrategy ..> CSVReader
+    ' MappingStrategy ..> IntrospectionException
+    ' MappingStrategy ..> PropertyDescriptor
+    ' MappingStrategy ..> IOException
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' public <T>
+    class HeaderColumnNameMappingStrategy implements MappingStrategy {
+      # header: String[]
+      # descriptorMap: Map<String, PropertyDescriptor>
+      # type: Class<T>
+
+      + captureHeader(reader: CSVReader): void
+      + findDescriptor(col: int): PropertyDescriptor
+      # getColumnName(col: int): String
+      # findDescriptor(name: String): PropertyDescriptor
+      # matches(name: String, desc: PropertyDescriptor): boolean
+      # loadDescriptorMap(cls: Class<T>): Map<String, PropertyDescriptor>
+      - loadDescriptors(cls: Class<T>): PropertyDescriptor[]
+      + createBean(): T
+      + getType(): Class<T>
+      + setType(type: Class<T>): void
+    }
+  ' HeaderColumnNameMappingStrategy ..> CSVReader
+  ' HeaderColumnNameMappingStrategy ..> BeanInfo
+  ' HeaderColumnNameMappingStrategy ..> IntrospectionException
+  ' HeaderColumnNameMappingStrategy ..> Introspector
+  ' HeaderColumnNameMappingStrategy ..> PropertyDescriptor
+  ' HeaderColumnNameMappingStrategy ..> IOException
+  ' HeaderColumnNameMappingStrategy ..> HashMap
+  ' HeaderColumnNameMappingStrategy ..> Map
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' public
+    class HeaderColumnNameTranslateMappingStrategy extends HeaderColumnNameMappingStrategy {
+      - columnMapping: Map<String, String>
+      # getColumnName(col: int): String
+      + getColumnMapping(): Map<String, String>
+      + setColumnMapping(columnMapping: Map<String, String>): void
+  }
+  ' HeaderColumnNameTranslateMappingStrategy ..> Hashmap
+  ' HeaderColumnNameTranslateMappingStrategy ..> Map
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    ' public
+    class ColumnPositionMappingStrategy extends HeaderColumnNameMappingStrategy {
+      - columnMapping: String[]
+      
+      + captureHeader(reader: CSVReader): void
+      # getColumnName(col: int): String
+      + getColumnMapping(): String[]
+      + setColumnMapping(columnMapping: String[]): void
+    }
+    ' ColumnPositionMappingStrategy ..> CSVReader
+    ' ColumnPositionMappingStrategy ..> IOException
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    ' public
+    class CsvToBean {
+      - editorMap: Map<Class<?>, PropertyEditor>
+
+      + CsvToBean()
+      + parse(mapper: MappingStrategy , reader: Reader): List<T>
+      + parse(mapper: MappingStrategy, csv: CSVReader): List<T>
+      # processLine(MappingStrategy mapper, String[] line): T
+      - checkForTrim(s: String, prop: PropertyDescriptor): String
+      - trimmableProperty(prop: PropertyDescriptor): boolean
+      # convertValue(value: String, prop: PropertyDescriptor): Object
+      - getPropertyEditorValue(cls: Class<?>): PropertyEditor
+      - addEditorToMap(cls: Class<?>, editor: PropertyEditor): void
+      # getPropertyEditor(desc: PropertyDescriptor): PropertyEditor
+    }
+    ' CsvToBean ..> PropertyDescriptor
+    ' CsvToBean ..> PropertyEditor
+    ' CsvToBean ..> Class
+    ' CsvToBean ..> HashMap
+    ' CsvToBean ..> PropertyEditorManager
+  }
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' public
+  class CSVParser {
+
+      - separator: final char 
+      - quotechar: final char 
+      - escape: final char 
+      - strictQuotes: final boolean 
+      - pending: String
+      - inField: boolean
+      - ignoreLeadingWhiteSpace: final boolean
+
+      + {static} DEFAULT_SEPARATOR: final char
+      + {static} INITIAL_READ_SIZE: final int
+      + {static} DEFAULT_QUOTE_CHARACTER: final char
+      + {static} DEFAULT_ESCAPE_CHARACTER: final char 
+      + {static} DEFAULT_STRICT_QUOTES: final boolean
+      + {static} DEFAULT_IGNORE_LEADING_WHITESPACE: final boolean 
+      + {static} NULL_CHARACTER: final char
+
+      + CSVParser()
+      + CSVParser(separator: char)
+      + CSVParser(separator: char, quotechar: char)
+      + CSVParser(separator: char, quotechar: char, escape: char): 
+      + CSVParser(separator: char, quotechar: char, escape: char, strictQuotes: boolean): 
+      + CSVParser(separator: char, quotechar: char, escape: char, strictQuotes: boolean, ignoreLeadingWhiteSpace: boolean): 
+
+      - anyCharactersAreTheSame(separator: char, quotechar: char, escape: char): boolean
+      - isSameCharacter(c1: char, c2: char): boolean
+      + isPending(): boolean
+      + parseLineMulti(nextLine: String): String[]
+      + parseLine(nextLine: String): String[]
+      - parseLine(nextLine: String, multi: boolean): String[]
+      # isNextCharacterEscapable(nextLine: String, inQuotes: boolean, i: int): 
+      # isAllWhiteSpace(sb: CharSequence): boolean
+  }
+  ' CSVParser ..> IOException
+  ' CSVParser ..> ArrayList
+  ' CSVParser ..> List
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' public
+  class CSVWriter implements Closeable {
+      
+      + {static} INITIAL_STRING_SIZE: final int
+      - rawWriter: Writer
+      - pw: PrintWriter
+      - separator: char
+      - quotechar: char
+      - escapechar: char
+      - String lineEnd: 
+
+      + {static} DEFAULT_ESCAPE_CHARACTER: final char
+      + {static} DEFAULT_SEPARATOR: final char
+      + {static} DEFAULT_QUOTE_CHARACTER: final char
+      + {static} NO_QUOTE_CHARACTER: final cha 
+      + {static} NO_ESCAPE_CHARACTER: final char
+      + {static} DEFAULT_LINE_END: final String
+
+      - resultService: ResultSetHelper
+
+      + CSVWriter(writer: Writer): 
+      + CSVWriter(writer: Writer, separator: char): 
+      + CSVWriter(writer: Writer, separator: char, quotechar: char): 
+      + CSVWriter(writer: Writer, separator: char, quotechar: char, escapechar: char): 
+      + CSVWriter(writer: Writer, separator: char, quotechar: char, lineEnd: String): 
+      + CSVWriter(writer: Writer, separator: char, quotechar: char, escapechar: char, lineEnd: String): 
+
+      + writeAll(allLines: List<String[]>) : void
+      # writeColumnNames(rs: ResultSet): void
+      + writeAll(java.sql.rs: ResultSet, includeColumnNames: boolean): void
+      + writeNext(nextLine: String[]): void
+      - stringContainsSpecialCharacters(line: String): boolean
+      # StringBuilder processLine(nextElement: String)
+      + flush(): void
+      + close(): void
+      + checkError(): boolean
+      + setResultService(resultService: ResultSetHelper): void
+  }
+  ' CSVWriter ..> Closeable 
+  ' CSVWriter ..> IOException 
+  ' CSVWriter ..> PrintWriter 
+  ' CSVWriter ..> Writer 
+  ' CSVWriter ..> ResultSet 
+  ' CSVWriter ..> SQLException 
+  ' CSVWriter ..> List
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' + 
+  class CSVReader implements Closeable {
+
+      - br: BufferedReader
+      - hasNext: boolean
+      - parser: CSVParser
+      - skipLines: 
+      - linesSkiped: boolean
+      + {static} DEFAULT_SKIP_LINES: final int
+
+      + CSVReader(reader: Reader): 
+      + CSVReader(reader: Reader, separator: char): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char, strictQuotes: boolean): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char, escape: char): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char, line: int): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char, escape: char, line: int): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char, escape: char, line: int, strictQuotes: boolean): 
+      + CSVReader(reader: Reader, separator: char, quotechar: char, escape: char, line: int, strictQuotes: boolean, ignoreLeadingWhiteSpace: boolean): 
+
+      + readAll(): List<String[]>
+      + readNext(): String[]
+      - getNextLine(): String
+      + close(): void
+  }
+  ' CSVReader ..> BufferedReader
+  ' CSVReader ..> Closeable
+  ' CSVReader ..> IOException
+  ' CSVReader ..> Reader
+  ' CSVReader ..> ArrayList
+  ' CSVReader ..> List
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' +
+  interface ResultSetHelper {
+      + getColumnNames(rs: ResultSet): String[]
+      + getColumnValues(rs: ResultSet): String[]
+  }
+  ' ResultSetHelper ..> IOException
+  ' ResultSetHelper ..> ResultSet
+  ' ResultSetHelper ..> SQLException
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' + 
+  class ResultSetHelperService implements ResultSetHelper {
+      + {static} CLOBBUFFERSIZE: final int
+    - {static} NVARCHAR: final int
+    - {static} NCHAR:  final int
+    - {static} LONGNVARCHAR: final int
+    - {static} NCLOB: final int
+
+      + getColumnNames(rs: ResultSet): String[]
+      + getColumnValues(rs: ResultSet): String[]
+      - handleObject(obj: Object): String 
+      - handleBigDecimal(decimal: BigDecimal): String 
+      - handleLong(rs: ResultSet, columnIndex: int): String 
+      - handleInteger(rs: ResultSet, columnIndex: int): String 
+      - handleDate(rs: ResultSet, columnIndex: int): String 
+      - handleTime(time: Time): String 
+      - handleTimestamp(timestamp: Timestamp): String 
+      - getColumnValue(rs: ResultSet, colType: int, colIndex: int): String 
+      - {static} read(c: Clob): String 
+  }
+  ' ResultSetHelperService ..> IOException: 
+  ' ResultSetHelperService ..> Reader: 
+  ' ResultSetHelperService ..> BigDecimal: 
+  ' ResultSetHelperService ..> SimpleDateFormat: 
+  ' ResultSetHelperService ..> ArrayList: 
+  ' ResultSetHelperService ..> List: 
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+}
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+MappingStrategy ..> CSVReader
+' MappingStrategy ..> IntrospectionException
+' MappingStrategy ..> PropertyDescriptor
+' MappingStrategy ..> IOException
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+HeaderColumnNameMappingStrategy ..> CSVReader
+' HeaderColumnNameMappingStrategy ..> BeanInfo
+' HeaderColumnNameMappingStrategy ..> IntrospectionException
+' HeaderColumnNameMappingStrategy ..> Introspector
+' HeaderColumnNameMappingStrategy ..> PropertyDescriptor
+' HeaderColumnNameMappingStrategy ..> IOException
+' HeaderColumnNameMappingStrategy ..> HashMap
+' HeaderColumnNameMappingStrategy ..> Map
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' HeaderColumnNameTranslateMappingStrategy ..> Hashmap
+' HeaderColumnNameTranslateMappingStrategy ..> Map
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+ColumnPositionMappingStrategy ..> CSVReader
+' ColumnPositionMappingStrategy ..> IOException
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' CsvToBean ..> PropertyDescriptor
+' CsvToBean ..> PropertyEditor
+' CsvToBean ..> Class
+' CsvToBean ..> HashMap
+' CsvToBean ..> PropertyEditorManager
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' CSVParser ..> IOException
+  ' CSVParser ..> ArrayList
+  ' CSVParser ..> List
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  CSVWriter ..> ResultSetHelper
+  ' CSVWriter ..> Closeable 
+  ' CSVWriter ..> IOException 
+  ' CSVWriter ..> PrintWriter 
+  ' CSVWriter ..> Writer 
+  ' CSVWriter ..> ResultSet 
+  ' CSVWriter ..> SQLException 
+  ' CSVWriter ..> List
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  CSVReader ..> CSVParser
+  ' CSVReader ..> BufferedReader
+  ' CSVReader ..> Closeable
+  ' CSVReader ..> IOException
+  ' CSVReader ..> Reader
+  ' CSVReader ..> ArrayList
+  ' CSVReader ..> List
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' ResultSetHelper ..> IOException
+  ' ResultSetHelper ..> ResultSet
+  ' ResultSetHelper ..> SQLException
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+  ' ResultSetHelperService ..> IOException: 
+  ' ResultSetHelperService ..> Reader: 
+  ' ResultSetHelperService ..> BigDecimal: 
+  ' ResultSetHelperService ..> SimpleDateFormat: 
+  ' ResultSetHelperService ..> ArrayList: 
+  ' ResultSetHelperService ..> List: 
+
+
+
+
+
+
+
+
+
+
+
+
+' class RoomEntropyChecker {
+'   - SLEEP_SEC: Integer 5000
+
+'   ' - new_instance(): void
+'   - loop_gui(): void
+'   ' - post_processing(): void
+' }
+' note left
+'   --Folder Tree--
+'   kodo2a
+'   |_ src
+'     |_ room_entropy_checker.py
+'     |_ gui_manager.py
+'     |_ img_exception.py
+'     |_ camera_img_extractor.py
+'     |_ absolute_entropy_analyser.py
+'     |_ relative_entropy_analyser.py
+'     |_ post_processing.py
+'     |_ Makefile
+'   |_ dist
+'     |_ previous_entropies.txt
+' end note
+
+' RoomEntropyChecker ..> GUIManager
+
+
+' ' class CleanMovie {
+' '   - should_clean_data: bool
+
+' '   - is_same_camera_pos(): void
+' '   + clean_movie_if_needed(): void
+' ' }
+' ' note left
+' ' Implement if possible
+' ' end note
+
+' class GUIManager {
+'   - PRAISE_STR: string "How beautiful your room is!!"
+'   - NORMAL_STR: string "Endeavor putting your room in order."
+'   - WARN_STR: string "How dirty yor room is...."
+'   - img: int[][]
+'   - binary_img: int[][]
+
+'   + init_gui(): void
+'   + update_gui(): void
+'   - print_img(img: int[][]): void
+'   - print_exception(): void
+'   - reprint_absolute_entropy(): void
+'   - reprint_relative_entropy(): void
+'   - to_entropy_level(relative_entropy: float): int
+'   + destroy_gui(): void
+' }
+' note left
+' Implement print_exception
+' if possible
+' end note
+
+' GUIManager ..> ImgException
+' GUIManager ..> AbsoluteEntropyAnalyser
+' GUIManager ..> RelativeEntropiyAnalyser
+' GUIManager ..> CameraImgExtractor
+' GUIManager ..> PostProcessing
+
+' class ImgException {
+'   ' + exists_any_exception(): void
+'   ' - exists_webcam(extractor: CametaImgExtractor): bool
+'   - exists_creature(img: int[][]): bool
+'   - is_dark_room(img: int[][]): bool
+' }
+' note left
+' Implement
+' if possible
+' end note
+
+' class CameraImgExtractor {
+'   - open_webcam_stream(): void
+'   + exists_webcam(): bool
+'   + read_img(): int[][]
+'   + calc_binary_img(): int[][]
+'   + release_webcam_stream(): void
+' }
+' note left
+' open_webcam_stem()
+' is in constractor
+' end note
+
+' class AbsoluteEntropyAnalyser {
+'   ' - AbsoluteEntropy: float 0.0f
+
+'   + calc_absolute_entropy(img: int[][]): float
+'   ' + get_absolute_entropy(): float
+' }
+
+' class RelativeEntropiyAnalyser {
+'   - previous_entropies: float[]
+'   - relative_entropy: float
+
+'   - new_entropies_log_if_needed(): void
+'   - load_previous_entropies(): void
+'   + calc_relative_entropy(img: int[][], absolute_entropy: float): float
+'   - update_previous_entropies(): void
+'   + close_log_file(): void
+' }
+
+' ' @see http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_gui/py_video_display/py_video_display.html
+' class PostProcessing {
+'   ' + post_processing_if_needed(): void
+'   + release_webcam_stream(extractor: CameraImgExtractor): void
+'   + close_log_file(analyser: RelativeEntropiyAnalyser): void
+'   + destroy_gui(manager: GUIManager): void
+' }
+
+' PostProcessing ..> CameraImgExtractor
+' PostProcessing ..> RelativeEntropiyAnalyser
+' PostProcessing ..> GUIManager
+
+
+' ********** PlantUML Tutorial **********
+
+' note left
+
+'   --木構造--
+'   |_build.gradle
+'   |_src
+'     |_main
+'       |_java
+'         |_**bold**
+'         |_--strike--
+'         |_//itaric//
+'         |___underline__
+'         |_""monospace""
+'     |_test
+
+' end note
+
+' class Hello　<<StereoType>> {
+'     {abstract} one: String
+'     {static} three(param1: String, param2: int): ': boolean     String two
+'     int four(List<String> param)
+' }
+' class World <Template>{
+'     - -Field: int
+'     # #Field: int
+'     ~ packagePrivateField: int
+'     + publicField: int
+
+'     - privateMethod(): void
+'     # #Method(): void
+'     ~ packagePrivateMethod(): void
+'     + publicMethod(): void
+' }
+' note left : note
+' note top of Hello: note
+
+' interface hoge
+' abstruct class hoge
+' enum HelloWorld {
+'     ONE
+'     TWO
+'     THREE
+' }
+
+' interface One
+' interface Two
+' interface Three extends Two
+' interface Four
+' class Five implements One, Three
+' class Six extends Five implements Four {
+'     field: String
+'     method(): void
+' }
+
+' Hello -- World
+' One --> Two
+' Three <-- Four
+' Five <--> Six
+' Seven x-- Eight
+' Nine --x Ten
+' One ..> Two
+' Three <.. Four
+' One --|> Two
+' Three <|-- Four
+' One ..|> Two
+' Three <|.. Four
+' One --o Two
+' Three o-- Four
+' One --* Two
+' Three *-- Four
+' One -- Two : Hoge
+' Three -- Four : Fuga >
+' Five -- Six : < Piyo
+' One "Foo" -- Two 
+' Three -- "Bar" Four
+' Five "1" -- "1..*" Six
+' Seven "1 Fizz" -- "~* Buzz" Eight
+
+' package one.two {
+'     class Hello
+' }
+' package three.four {
+'     World -- Hello
+' }
+
+' Hello -- World
+' note on link
+' hoge
+' fuga
+' end note
+
+@enduml
