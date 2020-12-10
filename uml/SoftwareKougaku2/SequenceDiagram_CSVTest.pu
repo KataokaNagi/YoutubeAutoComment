@@ -1,0 +1,110 @@
+' @file   class_diagram.pu
+' @auther AL18036 Kataoka Nagi
+' @note   ソフトウェア工学2 UMLレポート
+' @note   opencsvtest CSVTestクラス readNext() シーケンス図
+' @note   java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe .\class_diagram.pu
+' @see    https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+@startuml
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+header 
+SoftwareKougaku2 UML report
+Sequence diagram of readNext()
+2020-11-25 AL18036 Kataoka Nagi
+end header
+
+title
+**Sequence Diagram**
+readNext() in opencsvtest
+end title
+
+' group CSVTest
+
+' end
+
+
+actor user
+participant main
+participant CSVReader
+participant FileReader
+participant test.csv
+participant System.out
+participant Exception_Handler
+
+activate user
+user -> main: run main()
+
+activate main
+main -> Exception_Handler: activate try-cathch
+
+activate Exception_Handler
+main <-- Exception_Handler: continue main() process
+
+main -> CSVReader: run CSVReader
+activate CSVReader
+
+CSVReader -> FileReader: use FileReader
+activate FileReader
+
+FileReader -> test.csv: read test.csv as a file
+activate test.csv
+
+FileReader <-- test.csv: get test.csv as a file
+deactivate test.csv
+
+CSVReader <-- FileReader: return test.csv as a file
+deactivate FileReader
+
+CSVReader -> System.out: read and print the line of test.csv separating by " | "
+activate System.out
+
+CSVReader <-- System.out: EOF
+deactivate System.out
+
+main <- CSVReader: finish read and print
+deactivate CSVReader
+
+main -> Exception_Handler: deactivate try-catch
+main <-- Exception_Handler: continue main() process
+deactivate Exception_Handler
+
+user <-- main: finish run
+deactivate main
+deactivate user
+
+' actor Actor
+' boundary Boundary
+' control Control
+' entity Entity
+' database Database
+' collections Collections
+
+' participant hoge
+' participant fuga
+' participant piyo
+
+' ' numbering
+' autonumber 3
+
+' hoge -> fuga: foo
+' fuga --> hoge: bar
+
+' autonumber 2 3
+
+' fuga ->> piyo: a
+' piyo -> piyo: b
+
+' autonumber stop
+
+' piyo -> piyo: c
+
+' ' start
+' autonumber resume
+
+' piyo -> piyo: d
+
+@enduml

@@ -1,0 +1,120 @@
+' @file   class_diagram.pu
+' @auther AL18036 Kataoka Nagi
+' @note   ソフトウェア工学2 UMLレポート
+' @note   opencsvtest BeanMappingTestクラス mainメソッド シーケンス図
+' @note   java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe .\class_diagram.pu
+' @see    https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+@startuml
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+header 
+SoftwareKougaku2 UML report
+
+Sequnce diagram of main() of BeenMappingTest
+2020-11-25 AL18036 Kataoka Nagi
+end header
+
+title
+**Sequence Diagram**
+main() of BeenMappingTest in opencsvtest
+end title
+
+actor user
+participant main
+participant doTest
+participant init
+participant ColumnPositionMappingStrategy
+participant CsvToBean
+participant test.csv
+participant System.out
+
+activate user
+
+user -> main: run main()
+activate main
+
+main -> doTest: invoke doTest()
+activate doTest
+
+doTest -> init: invoke init()
+activate init
+
+init -> ColumnPositionMappingStrategy: set MockBean type into column position mapping strategy 
+activate ColumnPositionMappingStrategy
+
+init <-- ColumnPositionMappingStrategy: return to init()
+
+doTest <-- init: return to doTest()
+deactivate init
+
+doTest -> ColumnPositionMappingStrategy: set columns maping as {"name", "orderNumber", "id", "num"}
+
+doTest -> CsvToBean: run CsvToBean
+activate CsvToBean
+
+CsvToBean -> test.csv: read test.csv as a csv
+activate test.csv
+
+CsvToBean <-- test.csv: csv
+deactivate test.csv
+
+doTest <-- CsvToBean: return bean which were persed from csv
+deactivate CsvToBean
+
+doTest -> System.out: print coluumns
+activate System.out
+deactivate System.out
+
+main <- doTest: return to main()
+deactivate doTest
+
+user <-- main: finish run
+deactivate main
+deactivate user
+
+' deactivate test.csv
+' deactivate System.out
+
+
+
+
+
+
+
+
+' actor Actor
+' boundary Boundary
+' control Control
+' entity Entity
+' database Database
+' collections Collections
+
+' participant hoge
+' participant fuga
+' participant piyo
+
+' ' numbering
+' autonumber 3
+
+' hoge -> fuga: foo
+' fuga --> hoge: bar
+
+' autonumber 2 3
+
+' fuga ->> piyo: a
+' piyo -> piyo: b
+
+' autonumber stop
+
+' piyo -> piyo: c
+
+' ' start
+' autonumber resume
+
+' piyo -> piyo: d
+
+@enduml
