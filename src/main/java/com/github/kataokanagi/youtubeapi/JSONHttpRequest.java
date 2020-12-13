@@ -9,9 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class JSONHttpRequest {
 
