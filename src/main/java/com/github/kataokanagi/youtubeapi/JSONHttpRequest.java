@@ -53,7 +53,7 @@ public class JSONHttpRequest {
         return this;
     }
 
-    public JSONHttpRequest doRequest() {
+    public JSONHttpRequest doRequest() throws IOException {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
         if (params != null) {
@@ -99,18 +99,15 @@ public class JSONHttpRequest {
             }
 
             urlConnection.connect();
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "MalformedURLException: " + urlStr);
-            e.printStackTrace();
         } catch (IOException e) {
-            Log.e(TAG, "IOException: " + e.getMessage());
-            e.printStackTrace();
+            Log.e(TAG, "doRequest() IOException: " + e.getMessage());
+            throw e;
         }
 
         return this;
     }
 
-    public String getResponse() {
+    public String getResponse() throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
             String line = "";
@@ -122,9 +119,8 @@ public class JSONHttpRequest {
 
             return responseBuilder.toString();
         } catch (IOException e) {
-            Log.e(TAG, "result() IOException: " + e.getMessage());
-            e.printStackTrace();
-            return null;
+            Log.e(TAG, "getResponse() IOException: " + e.getMessage());
+            throw e;
         }
     }
 
