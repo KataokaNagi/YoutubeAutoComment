@@ -1,7 +1,11 @@
 package com.github.kataokanagi.youtubeapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kataokanagi.utils.Log;
+import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.HashMap;
@@ -13,7 +17,8 @@ public class API {
     private static final String YOUTUBE_V3_COMMENTTHREADS = "https://www.googleapis.com/youtube/v3/commentThreads";
     private static final String YOUTUBE_V3_COMMENTS = "https://www.googleapis.com/youtube/v3/comments";
 
-    public static String commentThreadList(String videoId) {
+    // Youtube API: Get a youtube comment thread which contains comment list
+    public static CommentThreadListResponse commentThreadList(String videoId) throws IOException {
         JSONHttpRequest jhr;
 
         if (Config.getHttpProxyEnabled()) {
@@ -30,12 +35,23 @@ public class API {
         params.put("videoId", videoId);
         params.put("maxResults", "100");
 
-        String result = jhr.setParams(params)
-                           .doRequest()
-                           .getResponse();
+        // doRequest & getResponse could trigger IOException if network error happened
+        String response = jhr.setParams(params)
+                             .doRequest()
+                             .getResponse();
 
-        Log.v(TAG, result);
-        return result;
+        // JSON deserialize
+        ObjectMapper mapper = new ObjectMapper();
+        CommentThreadListResponse listResponse = null;
+
+        try {
+            listResponse = mapper.readValue(response, CommentThreadListResponse.class);
+        } catch (JsonProcessingException e) {
+            // If data is corrupted
+            throw new IOException(e.getMessage());
+        }
+
+        return listResponse;
     }
 
 }
