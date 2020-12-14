@@ -2,10 +2,11 @@
 ' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
 ' @auther    AL18046 Kurihara Jin
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-14 22:53:02
+' @date      2020-12-15 00:37:03
 ' $Version   1.0
 ' $Revision  1.1
-' @par       変更点：一部の矢印を変更（片岡）
+' @par       変更点：Logの矢印を誘導可能性に変更（片岡）
+' @par       変更点：packageのフォルダ構造を変更（片岡）
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 @startuml out/ClassDiagram.png
