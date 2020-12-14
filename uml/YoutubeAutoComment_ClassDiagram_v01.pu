@@ -1,8 +1,12 @@
-' @file   YoutubeAutoComment_ClassDiagram_v01.pu
-' @auther AL18046 Kurihara Jin
-' @note   高度情報演習2B プロジェクト計画書用クラス図
-' @note   クラス図出力用のファイル
-' @see    https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+' @file      YoutubeAutoComment_ClassDiagram_v01.pu
+' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
+' @auther    AL18046 Kurihara Jin
+' @auther    AL18036 Kataoka Nagi
+' @date      2020-12-14 22:53:02
+' $Version   1.0
+' $Revision  1.1
+' @par       変更点：一部の矢印を変更（片岡）
+' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 @startuml out/ClassDiagram.png
 scale 1.5
@@ -141,9 +145,9 @@ package com.github.kataokanagi {
 API o-- CommentThreadListResponse
 
 ' API o-- Log
-EmotionAnalyser o-- Log
-ReplyGenerator o-- Log
-JSONHttpRequest o-- Log
+EmotionAnalyser x-- Log
+ReplyGenerator x-- Log
+JSONHttpRequest x-- Log
 
 
 ' package com.github.kataokanagi {
