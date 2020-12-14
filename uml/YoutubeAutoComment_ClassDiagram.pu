@@ -1,8 +1,13 @@
-' @file   YoutubeAutoComment_ClassDiagram_v01.pu
-' @auther AL18046 Kurihara Jin
-' @note   高度情報演習2B プロジェクト計画書用クラス図
-' @note   クラス図出力用のファイル
-' @see    https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+' @file      YoutubeAutoComment_ClassDiagram_v01.pu
+' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
+' @auther    AL18046 Kurihara Jin
+' @auther    AL18036 Kataoka Nagi
+' @date      2020-12-15 00:37:03
+' $Version   1.0
+' $Revision  1.1
+' @par       変更点：Logの矢印を誘導可能性に変更（片岡）
+' @par       変更点：packageのフォルダ構造を変更（片岡）
+' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 @startuml out/ClassDiagram.png
 scale 1.5
@@ -12,6 +17,15 @@ skinparam classAttributeIconSize 0
 
 ' class def
 ' @see https://qiita.com/KeithYokoma/items/ee21fec6a3ebb5d1e9a8
+
+package com.github.kataokanagi {
+  package com.github.kataokanagi.utils {
+  }
+  package com.github.kataokanagi.youtubeapi {
+    package com.github.kataokanagi.youtubeapi.model {      
+    }    
+  }
+}
 
 package com.github.kataokanagi.utils {
     class Log {
@@ -141,9 +155,9 @@ package com.github.kataokanagi {
 API o-- CommentThreadListResponse
 
 ' API o-- Log
-EmotionAnalyser o-- Log
-ReplyGenerator o-- Log
-JSONHttpRequest o-- Log
+EmotionAnalyser x-- Log
+ReplyGenerator x-- Log
+JSONHttpRequest x-- Log
 
 
 ' package com.github.kataokanagi {
