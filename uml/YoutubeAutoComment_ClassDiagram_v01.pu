@@ -17,6 +17,15 @@ skinparam classAttributeIconSize 0
 ' class def
 ' @see https://qiita.com/KeithYokoma/items/ee21fec6a3ebb5d1e9a8
 
+package com.github.kataokanagi {
+  package com.github.kataokanagi.utils {
+  }
+  package com.github.kataokanagi.youtubeapi {
+    package com.github.kataokanagi.youtubeapi.model {      
+    }    
+  }
+}
+
 package com.github.kataokanagi.utils {
     class Log {
         - {static} ENABLE_DEBUG: boolean = true
