@@ -72,6 +72,9 @@ package com.github.kataokanagi.youtubeapi.model {
         + etag: String
         + items: CommentThread[]
     }
+
+    CommentThreadListResponse o-- CommentThread
+    CommentThread o-- Comment
 }
 
 package com.github.kataokanagi.youtubeapi {
@@ -134,6 +137,14 @@ package com.github.kataokanagi {
         + generate(comment: String, positiveLevel: double): String
     }
 }
+
+API o-- CommentThreadListResponse
+
+' API o-- Log
+EmotionAnalyser o-- Log
+ReplyGenerator o-- Log
+JSONHttpRequest o-- Log
+
 
 ' package com.github.kataokanagi {
 '     package utils {
