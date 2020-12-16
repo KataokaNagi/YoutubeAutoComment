@@ -160,6 +160,9 @@ EmotionAnalyser x-- Log
 ReplyGenerator x-- Log
 JSONHttpRequest x-- Log
 
+API o-- JSONHttpRequest
+API x-- Log
+
 
 ' package com.github.kataokanagi {
 '     package utils {
