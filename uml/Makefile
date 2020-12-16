@@ -6,7 +6,7 @@
 
 COMPILER := java
 CLASS_DIAGRAM_TARGET := YoutubeAutoComment_ClassDiagram
-GET_COMMENT_TARGET := YoutubeAutoComment_ScequenceDiagram_GetComment
+GET_COMMENT_TARGET := YoutubeAutoComment_SequenceDiagram_GetComment
 JAR_FLAGS := -jar plantuml.jar
 GRAPHVIZ_FLAGS := -graphvizdot C:\Graphviz\bin\dot.exe
 CHARSET_FLAGS := -charset UTF-8
@@ -14,7 +14,7 @@ CHARSET_FLAGS := -charset UTF-8
 .PHONY: all
 all: class get_comment
 # java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ClassDiagram.pu
-# java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ScequenceDiagram.pu
+# java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_SequenceDiagram.pu
 
 .PHONY: class
 class: $(CLASS_DIAGRAM_TARGET).png
