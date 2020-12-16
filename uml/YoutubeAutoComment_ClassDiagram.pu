@@ -1,12 +1,11 @@
-' @file      YoutubeAutoComment_ClassDiagram_v01.pu
+' @file      YoutubeAutoComment_ClassDiagram.pu
 ' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
 ' @auther    AL18046 Kurihara Jin
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-15 00:37:03
+' @date      2020-12-17 01:45:37
 ' $Version   1.0
-' $Revision  1.1
-' @par       変更点：Logの矢印を誘導可能性に変更（片岡）
-' @par       変更点：packageのフォルダ構造を変更（片岡）
+' $Revision  1.2
+' @par       変更点：API.javaに架空のメソッドreplyComment(videoId: String, comment: String): voidを追加（片岡）
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 @startuml out/ClassDiagram.png
@@ -98,6 +97,7 @@ package com.github.kataokanagi.youtubeapi {
         - {static} YOUTUBE_V3_COMMENTS: String = "https://www.googleapis.com/youtube/v3/comments"
 
         + {static} commentThreadList(videoId: String): CommentThreadListResponse
+        + {static} replyComment(videoId: String, comment: String): void
     }
 
     class Config {
