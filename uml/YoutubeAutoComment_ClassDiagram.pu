@@ -2,10 +2,12 @@
 ' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
 ' @auther    AL18046 Kurihara Jin
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-17 01:45:37
-' $Version   1.0
-' $Revision  1.2
-' @par       変更点：API.javaに架空のメソッドreplyComment(videoId: String, comment: String): voidを追加（片岡）
+' @date      2020-12-17 01:59:08
+' $Version   1.1
+' $Revision  1.3
+' @par       追加点：#14 API o-- JSONHttpRequest（片岡）
+' @par       追加点：#15 API x-- Log （片岡）
+' @par       追加点：#15 API x-- Config （片岡）
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 @startuml out/ClassDiagram.png
@@ -159,6 +161,9 @@ EmotionAnalyser x-- Log
 ReplyGenerator x-- Log
 JSONHttpRequest x-- Log
 
+API o-- JSONHttpRequest
+API x-- Log
+API x-- Config
 
 ' package com.github.kataokanagi {
 '     package utils {
