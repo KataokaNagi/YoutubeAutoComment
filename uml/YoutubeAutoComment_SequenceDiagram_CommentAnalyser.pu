@@ -6,6 +6,7 @@
 ' $Version   1.0
 ' $Revision  1.0
 ' @par       変更点：新規作成
+' @par       getCommentSurfaceList() の用途がよくわからなかった
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -19,72 +20,49 @@ skinparam classAttributeIconSize 0
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
 title
-**Youtubeコメントの取得**
+**Youtubeコメントの解析 / 返信**
 end title
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 actor User
 participant YoutubeAutoComment.java
+participant EmotionAnalyser.java
+participant ReplyGenerator.java
+participant PolarDictionary
 participant API.java
-participant JSONHttpRequest.java
-participant Config.java
-' 冗長？
-' participant HashMap.java
-' participant ObjectMapper.java
-
-' participant EmoationAnalyser.java
-' participant ReplyGenerator.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 activate YoutubeAutoComment.java
+YoutubeAutoComment.java -> EmotionAnalyser.java: EmotionAnalyser(dictionaryPath: String)
+activate EmotionAnalyser.java
+
+EmotionAnalyser.java -> PolarDictionary: File(dictionaryPath: String)
+activate PolarDictionary
+deactivate PolarDictionary
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> EmotionAnalyser.java: getPositiveLevel(comment: String): double
+EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCount: int,\n negativeCount: int): double
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> ReplyGenerator.java: generate(comment: String,\n positiveLevel: double): String
+activate ReplyGenerator.java
+deactivate ReplyGenerator.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' でっちあげコメント
+YoutubeAutoComment.java -> API.java: replyComment(videoId: String, comment: String): void
+activate API.java
+deactivate API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
 
 activate User
-User -> User: Comment on Youtube
+User -> User: Read comment on Youtube
 deactivate User
-
-''''''''''''''''''''''''''''''''''''''''''''''''''
-' activate YoutubeAutoComment.java
-YoutubeAutoComment.java -> YoutubeAutoComment.java: Every 1 min.
-' deactivate YoutubeAutoComment.java
-
-''''''''''''''''''''''''''''''''''''''''''''''''''
-
-YoutubeAutoComment.java -> API.java: commentThreadList(videoId: String)\n: CommentThreadListResponse
-activate API.java
-
-''''''''''''''''''''''''''''''''''''''''''''''''''
-
-API.java -> Config.java: getHttpProxyEnabled(): boolean
-activate Config.java
-deactivate Config.java
-
-alt getHttpProxyEnabled() == true
-  API.java -> JSONHttpRequest.java: JSONHttpRequest(proxy: Proxy, method: String, baseUrl: String)
-  activate JSONHttpRequest.java
-else else
-  API.java -> JSONHttpRequest.java: JSONHttpRequest(method: String, baseUrl: String)
-end
-
-''''''''''''''''''''''''''''''''''''''''''''''''''
-
-API.java -> Config.java: getApiKey(): String
-activate Config.java
-deactivate Config.java
-
-' 冗長？
-' API.java -> HashMap.java: put(K: Object, V: Object)
-' API.java -> HashMap.java
-' API.java -> HashMap.java
-' API.java -> HashMap.java
-' API.java -> HashMap.java
-
-''''''''''''''''''''''''''''''''''''''''''''''''''
-
-API.java -> JSONHttpRequest.java: setParams(params: Map<String, String>)\n: JSONHttpRequest
-API.java -> JSONHttpRequest.java: doRequest(): JSONHttpRequest
-API.java -> JSONHttpRequest.java: getResponse(): String
-
-''''''''''''''''''''''''''''''''''''''''''''''''''
 
 @enduml
