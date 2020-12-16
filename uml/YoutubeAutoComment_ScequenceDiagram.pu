@@ -24,15 +24,67 @@ end title
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-actor ユーザー
+actor User
 participant YoutubeAutoComment.java
 participant API.java
 participant JSONHttpRequest.java
 participant Config.java
-participant EmoationAnalyser.java
-participant ReplyGenerator.java
+' 冗長？
+' participant HashMap.java
+' participant ObjectMapper.java
 
+' participant EmoationAnalyser.java
+' participant ReplyGenerator.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+activate YoutubeAutoComment.java
+
+activate User
+User -> User: Comment on Youtube
+deactivate User
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' activate YoutubeAutoComment.java
+YoutubeAutoComment.java -> YoutubeAutoComment.java: Every 1 min.
+' deactivate YoutubeAutoComment.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> API.java: commentThreadList(videoId: String)\n: CommentThreadListResponse
+activate API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+API.java -> Config.java: getHttpProxyEnabled(): boolean
+activate Config.java
+deactivate Config.java
+
+alt getHttpProxyEnabled() == true
+  API.java -> JSONHttpRequest.java: JSONHttpRequest(proxy: Proxy, method: String, baseUrl: String)
+  activate JSONHttpRequest.java
+else else
+  API.java -> JSONHttpRequest.java: JSONHttpRequest(method: String, baseUrl: String)
+end
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+API.java -> Config.java: getApiKey(): String
+activate Config.java
+deactivate Config.java
+
+' 冗長？
+' API.java -> HashMap.java: put(K: Object, V: Object)
+' API.java -> HashMap.java
+' API.java -> HashMap.java
+' API.java -> HashMap.java
+' API.java -> HashMap.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+API.java -> JSONHttpRequest.java: setParams(params: Map<String, String>)\n: JSONHttpRequest
+API.java -> JSONHttpRequest.java: doRequest(): JSONHttpRequest
+API.java -> JSONHttpRequest.java: getResponse(): String
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
 
 @enduml
