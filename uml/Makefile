@@ -6,26 +6,26 @@
 
 COMPILER := java
 CLASS_DIAGRAM_TARGET := YoutubeAutoComment_ClassDiagram
-SEQUENCE_DIAGRAM_TARGET := YoutubeAutoComment_ScequenceDiagram
+GET_COMMENT_TARGET := YoutubeAutoComment_ScequenceDiagram_GetComment
 JAR_FLAGS := -jar plantuml.jar
 GRAPHVIZ_FLAGS := -graphvizdot C:\Graphviz\bin\dot.exe
 CHARSET_FLAGS := -charset UTF-8
 
 .PHONY: all
-all: class seq
+all: class get_comment
 # java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ClassDiagram.pu
 # java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ScequenceDiagram.pu
 
 .PHONY: class
 class: $(CLASS_DIAGRAM_TARGET).png
 
-.PHONY: seq
-seq: $(SEQUENCE_DIAGRAM_TARGET).png
+.PHONY: get_comment
+get_comment: $(GET_COMMENT_TARGET).png
 
 $(CLASS_DIAGRAM_TARGET).png: $(CLASS_DIAGRAM_TARGET).pu
 	$(COMPILER) $(JAR_FLAGS) $(GRAPHVIZ_FLAGS) $(CHARSET_FLAGS) $^
 
-$(SEQUENCE_DIAGRAM_TARGET).png: $(SEQUENCE_DIAGRAM_TARGET).pu
+$(GET_COMMENT_TARGET).png: $(GET_COMMENT_TARGET).pu
 	$(COMPILER) $(JAR_FLAGS) $(GRAPHVIZ_FLAGS) $(CHARSET_FLAGS) $^
 
 .PHONY: clean
