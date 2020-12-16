@@ -16,15 +16,18 @@ skinparam DefaultFontName メイリオ
 ' 可視性の変更
 skinparam classAttributeIconSize 0
 
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 actor ユーザー
-participant main
-participant CSVReader
-participant FileReader
-participant test.csv
-participant System.out
-participant Exception_Handler
+participant YoutubeAutoComment.java
+participant API.java
+participant JSONHttpRequest.java
+participant Config.java
+participant EmoationAnalyser.java
+participant ReplyGenerator.java
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
