@@ -1,5 +1,6 @@
 ' @file      YoutubeAutoComment_ScequenceDiagram_v01.pu
 ' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル
+' @note      java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ScequenceDiagram.pu
 ' @auther    AL18036 Kataoka Nagi
 ' @date      2020-12-16 10:23:46
 ' $Version   1.0
@@ -17,6 +18,13 @@ skinparam classAttributeIconSize 0
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+actor ユーザー
+participant main
+participant CSVReader
+participant FileReader
+participant test.csv
+participant System.out
+participant Exception_Handler
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
