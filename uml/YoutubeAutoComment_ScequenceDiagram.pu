@@ -1,0 +1,24 @@
+' @file      YoutubeAutoComment_ScequenceDiagram_v01.pu
+' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル
+' @auther    AL18036 Kataoka Nagi
+' @date      2020-12-16 10:23:46
+' $Version   1.0
+' $Revision  1.0
+' @par       変更点：全体の草案の新規作成
+' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+@startuml out/ScequenceDiagram.png
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+@enduml
