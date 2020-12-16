@@ -6,26 +6,33 @@
 
 COMPILER := java
 CLASS_DIAGRAM_TARGET := YoutubeAutoComment_ClassDiagram
-GET_COMMENT_TARGET := YoutubeAutoComment_ScequenceDiagram_GetComment
+GET_COMMENT_TARGET := YoutubeAutoComment_SequenceDiagram_GetComment
+COMMENT_ANALYSER_TARGET := YoutubeAutoComment_SequenceDiagram_CommentAnalyser
 JAR_FLAGS := -jar plantuml.jar
 GRAPHVIZ_FLAGS := -graphvizdot C:\Graphviz\bin\dot.exe
 CHARSET_FLAGS := -charset UTF-8
 
 .PHONY: all
-all: class get_comment
+all: class getter analyser
 # java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ClassDiagram.pu
-# java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_ScequenceDiagram.pu
+# java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\YoutubeAutoComment_SequenceDiagram.pu
 
 .PHONY: class
 class: $(CLASS_DIAGRAM_TARGET).png
 
-.PHONY: get_comment
-get_comment: $(GET_COMMENT_TARGET).png
+.PHONY: getter
+getter: $(GET_COMMENT_TARGET).png
+
+.PHONY: analyser
+analyser: $(COMMENT_ANALYSER_TARGET).png
 
 $(CLASS_DIAGRAM_TARGET).png: $(CLASS_DIAGRAM_TARGET).pu
 	$(COMPILER) $(JAR_FLAGS) $(GRAPHVIZ_FLAGS) $(CHARSET_FLAGS) $^
 
 $(GET_COMMENT_TARGET).png: $(GET_COMMENT_TARGET).pu
+	$(COMPILER) $(JAR_FLAGS) $(GRAPHVIZ_FLAGS) $(CHARSET_FLAGS) $^
+
+$(COMMENT_ANALYSER_TARGET).png: $(COMMENT_ANALYSER_TARGET).pu
 	$(COMPILER) $(JAR_FLAGS) $(GRAPHVIZ_FLAGS) $(CHARSET_FLAGS) $^
 
 .PHONY: clean

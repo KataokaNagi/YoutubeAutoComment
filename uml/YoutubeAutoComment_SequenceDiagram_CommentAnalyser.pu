@@ -1,0 +1,68 @@
+' @file      YoutubeAutoComment_SequenceDiagram_CommentAnalyser.pu
+' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル（コメント解析パート）
+' @note      java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\*.pu
+' @auther    AL18036 Kataoka Nagi
+' @date      2020-12-17 00:28:23
+' $Version   1.0
+' $Revision  1.0
+' @par       変更点：新規作成
+' @par       getCommentSurfaceList() の用途がよくわからなかった
+' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+@startuml out/SequenceDiagram_CommentAnalyser.png
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+title
+**Youtubeコメントの解析 / 返信**
+end title
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+actor User
+participant YoutubeAutoComment.java
+participant EmotionAnalyser.java
+participant ReplyGenerator.java
+participant PolarDictionary
+participant API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+activate YoutubeAutoComment.java
+YoutubeAutoComment.java -> EmotionAnalyser.java: EmotionAnalyser(dictionaryPath: String)
+activate EmotionAnalyser.java
+
+EmotionAnalyser.java -> PolarDictionary: File(dictionaryPath: String)
+activate PolarDictionary
+deactivate PolarDictionary
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> EmotionAnalyser.java: getPositiveLevel(comment: String): double
+EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCount: int,\n negativeCount: int): double
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> ReplyGenerator.java: generate(comment: String,\n positiveLevel: double): String
+activate ReplyGenerator.java
+deactivate ReplyGenerator.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' でっちあげコメント
+YoutubeAutoComment.java -> API.java: replyComment(videoId: String, comment: String): void
+activate API.java
+deactivate API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+activate User
+User -> User: Read comment on Youtube
+deactivate User
+
+@enduml
