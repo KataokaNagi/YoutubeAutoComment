@@ -1,16 +1,16 @@
-' @file      YoutubeAutoComment_SequenceDiagram_GetComment.pu
-' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル（コメント取得パート）
+' @file      YoutubeAutoComment_SequenceDiagram_CommentAnalyser.pu
+' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル（コメント解析パート）
 ' @note      java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\*.pu
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-17 00:28:11
+' @date      2020-12-17 00:28:23
 ' $Version   1.0
-' $Revision  1.1
-' @par       変更点：Sequenceのつづりの修正
+' $Revision  1.0
+' @par       変更点：新規作成
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-@startuml out/SequenceDiagram_GetComment.png
+@startuml out/SequenceDiagram_CommentAnalyser.png
 scale 1.5
 skinparam DefaultFontName メイリオ
 ' 可視性の変更
