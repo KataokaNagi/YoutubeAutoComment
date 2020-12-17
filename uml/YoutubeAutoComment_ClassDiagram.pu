@@ -1,0 +1,180 @@
+' @file      YoutubeAutoComment_ClassDiagram.pu
+' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
+' @auther    AL18046 Kurihara Jin
+' @auther    AL18036 Kataoka Nagi
+' @date      2020-12-17 01:59:08
+' $Version   1.1
+' $Revision  1.3
+' @par       追加点：#14 API o-- JSONHttpRequest（片岡）
+' @par       追加点：#15 API x-- Log （片岡）
+' @par       追加点：#15 API x-- Config （片岡）
+' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+@startuml out/ClassDiagram.png
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+' class def
+' @see https://qiita.com/KeithYokoma/items/ee21fec6a3ebb5d1e9a8
+
+package com.github.kataokanagi {
+  package com.github.kataokanagi.utils {
+  }
+  package com.github.kataokanagi.youtubeapi {
+    package com.github.kataokanagi.youtubeapi.model {      
+    }    
+  }
+}
+
+package com.github.kataokanagi.utils {
+    class Log {
+        - {static} ENABLE_DEBUG: boolean = true
+        - {static} ENABLE_VERBOSE: boolean = true
+        - {static} ANSI_RESET: String = "\u001B[0m"
+        - {static} ANSI_RED = "\u001B[31m"
+        - {static} ANSI_YELLOW = "\u001B[33m"
+
+        + {static} d(tag: String, msg: String): void
+        + {static} v(tag: String, msg: String): void
+        + {static} e(tag: String, msg: String): void
+        + {static} w(tag: String, msg: String): void
+    }
+}
+
+package com.github.kataokanagi.youtubeapi.model {
+    class Comment {
+        + kind: String
+        + etag: String
+        + id: String
+        + snippet: CommentSnippet
+    }
+
+    class CommentSnippet {
+        + videoId: String
+        + textDisplay: String
+        + textOriginal: String
+        + authorDisplayName: String
+        + authorChannelUrl: String
+        + canRate: boolean
+        + likeCount: int
+        + publishedAt: Date
+        + updatedAt: Date
+    }
+
+    Comment +-- CommentSnippet
+
+    class CommentThread {
+        + kind: String
+        + etag: String
+        + id: String
+        + snippet: CommentThreadSnippet
+    }
+
+    class CommentThreadSnippet {
+        + videoId: String
+        + topLevelComment: Comment
+        + canReply: boolean
+        + totalReplyCount: int
+        + isPublic: boolean
+    }
+
+    CommentThread +-- CommentThreadSnippet
+
+    class CommentThreadListResponse {
+        + kind: String
+        + etag: String
+        + items: CommentThread[]
+    }
+
+    CommentThreadListResponse o-- CommentThread
+    CommentThread o-- Comment
+}
+
+package com.github.kataokanagi.youtubeapi {
+    class API {
+        - {static} TAG: String = "API"
+        - {static} YOUTUBE_V3_COMMENTTHREADS: String = "https://www.googleapis.com/youtube/v3/commentThreads"
+        - {static} YOUTUBE_V3_COMMENTS: String = "https://www.googleapis.com/youtube/v3/comments"
+
+        + {static} commentThreadList(videoId: String): CommentThreadListResponse
+        + {static} replyComment(videoId: String, comment: String): void
+    }
+
+    class Config {
+        - {static} API_KEY: String = ""
+        - {static} enableHttpProxy: boolean = false
+        - {static} httpProxyHost: String
+        - {static} httpProxyPort: int
+
+        + {static} getHttpProxyEnabled(): boolean
+        + {static} setHttpProxyEnabled(enabled: boolean): void
+        + {static} setHttpProxyServer(host: String, port: int): void
+        + {static} getHttpProxyHost(): String
+        + {static} getApiKey(): String
+    }
+
+    class JSONHttpRequest {
+        - {static} TAG: String = "JSONHttpRequest"
+        - proxy: Proxy
+        - method: String
+        - baseUrl: String
+        - params: Map<String, String>
+        - headers: Map<String, String>
+        - payload: String
+        - urlConnection: HttpURLConnection
+
+        + JSONHttpRequest(method: String, baseUrl: String)
+        + JSONHttpRequest(proxy: Proxy, method: String, baseUrl: String)
+        + setParams(params: Map<String, String>): JSONHttpRequest
+        + setHeaders(headers: Map<String, String>): JSONHttpRequest
+        + setPayload(payload: String): JSONHttpRequest
+        + doRequest(): JSONHttpRequest
+        + getResponse(): String
+    }
+}
+
+package com.github.kataokanagi {
+    class EmotionAnalyser {
+        - {static} TAG: String = "EmotionAnalyser"
+        - sentiMap: Map<String, String> = new HashMap<>()
+
+        + EmotionAnalyser(dictionaryPath: String)
+        + getPositiveLevel(comment: String): double
+        - getCommentSurfaceList(): List<String>
+        - evalFunc(positiveCount: int, negativeCount: int): double
+    }
+
+    class ReplyGenerator {
+        - {static} TAG: String = "ReplyGenerator"
+
+        + ReplyGenerator()
+        + generate(comment: String, positiveLevel: double): String
+    }
+}
+
+API o-- CommentThreadListResponse
+
+' API o-- Log
+EmotionAnalyser x-- Log
+ReplyGenerator x-- Log
+JSONHttpRequest x-- Log
+
+API o-- JSONHttpRequest
+API x-- Log
+API x-- Config
+
+' package com.github.kataokanagi {
+'     package utils {
+
+'     }
+
+'     package youtubeapi {
+'         package model {
+
+'         }
+'     }
+' }
+
+@enduml
