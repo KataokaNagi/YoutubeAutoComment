@@ -3,6 +3,7 @@ package com.github.kataokanagi.youtubeapi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kataokanagi.utils.Log;
+import com.github.kataokanagi.youtubeapi.model.Comment;
 import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
 
 import java.io.IOException;
@@ -52,6 +53,12 @@ public class API {
         }
 
         return listResponse;
+    }
+
+    // Youtube API: Reply to a comment
+    public static Comment commentsInsert(String parentId, String commentText) throws IOException {
+        // TODO: Implement
+        return null;
     }
 
 }
