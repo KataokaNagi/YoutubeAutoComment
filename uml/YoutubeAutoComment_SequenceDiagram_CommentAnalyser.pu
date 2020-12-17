@@ -2,11 +2,10 @@
 ' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル（コメント解析パート）
 ' @note      java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\*.pu
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-17 00:28:23
-' $Version   1.0
+' @date      2020-12-17 15:36:47
+' $Version   1.1
 ' $Revision  1.0
-' @par       変更点：新規作成
-' @par       getCommentSurfaceList() の用途がよくわからなかった
+' @par       追加点：MeCab関係
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -29,13 +28,23 @@ actor User
 participant YoutubeAutoComment.java
 participant EmotionAnalyser.java
 participant ReplyGenerator.java
-participant PolarDictionary
 participant API.java
+participant MeCab
+participant PolarDictionary
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 activate YoutubeAutoComment.java
 YoutubeAutoComment.java -> EmotionAnalyser.java: EmotionAnalyser(dictionaryPath: String)
 activate EmotionAnalyser.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> EmotionAnalyser.java: getCommentSurfaceList(): List<String> 
+EmotionAnalyser.java -> MeCab: exec(String: mecabCommand): Process
+activate MeCab
+deactivate MeCab
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
 
 EmotionAnalyser.java -> PolarDictionary: File(dictionaryPath: String)
 activate PolarDictionary
