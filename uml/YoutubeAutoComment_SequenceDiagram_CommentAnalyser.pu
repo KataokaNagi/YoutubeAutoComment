@@ -4,8 +4,9 @@
 ' @auther    AL18036 Kataoka Nagi
 ' @date      2020-12-17 15:36:47
 ' $Version   1.1
-' $Revision  1.0
+' $Revision  1.1
 ' @par       追加点：MeCab関係
+' @par       修正点：返信関係  replyComment -> API.javaのcommentsInsertメソッド
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -64,7 +65,7 @@ deactivate ReplyGenerator.java
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
 ' でっちあげコメント
-YoutubeAutoComment.java -> API.java: replyComment(videoId: String, comment: String): void
+YoutubeAutoComment.java -> API.java:  commentsInsert(parentId: String, commentText: String): Comment
 activate API.java
 deactivate API.java
 
