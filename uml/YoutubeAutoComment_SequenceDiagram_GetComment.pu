@@ -1,0 +1,90 @@
+' @file      YoutubeAutoComment_SequenceDiagram_GetComment.pu
+' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル（コメント取得パート）
+' @note      java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\*.pu
+' @auther    AL18036 Kataoka Nagi
+' @date      2020-12-17 00:28:11
+' $Version   1.0
+' $Revision  1.1
+' @par       変更点：Sequenceのつづりの修正
+' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+@startuml out/SequenceDiagram_GetComment.png
+scale 1.5
+skinparam DefaultFontName メイリオ
+' 可視性の変更
+skinparam classAttributeIconSize 0
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+title
+**Youtubeコメントの取得**
+end title
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+actor User
+participant YoutubeAutoComment.java
+participant API.java
+participant JSONHttpRequest.java
+participant Config.java
+' 冗長？
+' participant HashMap.java
+' participant ObjectMapper.java
+
+' participant EmoationAnalyser.java
+' participant ReplyGenerator.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+activate YoutubeAutoComment.java
+
+activate User
+User -> User: Comment on Youtube
+deactivate User
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+' activate YoutubeAutoComment.java
+YoutubeAutoComment.java -> YoutubeAutoComment.java: Every 1 min.
+' deactivate YoutubeAutoComment.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> API.java: commentThreadList(videoId: String)\n: CommentThreadListResponse
+activate API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+API.java -> Config.java: getHttpProxyEnabled(): boolean
+activate Config.java
+deactivate Config.java
+
+alt getHttpProxyEnabled() == true
+  API.java -> JSONHttpRequest.java: JSONHttpRequest(proxy: Proxy, method: String, baseUrl: String)
+  activate JSONHttpRequest.java
+else else
+  API.java -> JSONHttpRequest.java: JSONHttpRequest(method: String, baseUrl: String)
+end
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+API.java -> Config.java: getApiKey(): String
+activate Config.java
+deactivate Config.java
+
+' 冗長？
+' API.java -> HashMap.java: put(K: Object, V: Object)
+' API.java -> HashMap.java
+' API.java -> HashMap.java
+' API.java -> HashMap.java
+' API.java -> HashMap.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+API.java -> JSONHttpRequest.java: setParams(params: Map<String, String>)\n: JSONHttpRequest
+API.java -> JSONHttpRequest.java: doRequest(): JSONHttpRequest
+API.java -> JSONHttpRequest.java: getResponse(): String
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+@enduml
