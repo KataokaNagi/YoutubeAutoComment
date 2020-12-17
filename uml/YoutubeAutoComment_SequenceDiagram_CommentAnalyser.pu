@@ -2,11 +2,10 @@
 ' @brief     高度情報演習2B プロジェクト計画書のシーケンス図の出力用ファイル（コメント解析パート）
 ' @note      java -jar plantuml.jar -graphvizdot C:\Graphviz\bin\dot.exe -charset UTF-8 .\*.pu
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-17 15:36:47
+' @date      2020-12-17 15:58:33
 ' $Version   1.1
-' $Revision  1.1
-' @par       追加点：MeCab関係
-' @par       修正点：返信関係  replyComment -> API.javaのcommentsInsertメソッド
+' $Revision  1.2
+' @par       修正点：exec()削除，getCommentSurfaceList()の移動
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -40,8 +39,8 @@ activate EmotionAnalyser.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-YoutubeAutoComment.java -> EmotionAnalyser.java: getCommentSurfaceList(): List<String> 
-EmotionAnalyser.java -> MeCab: exec(String: mecabCommand): Process
+EmotionAnalyser.java -> MeCab: getCommentSurfaceList(): List<String> 
+' EmotionAnalyser.java -> MeCab: exec(String: mecabCommand): Process
 activate MeCab
 deactivate MeCab
 
