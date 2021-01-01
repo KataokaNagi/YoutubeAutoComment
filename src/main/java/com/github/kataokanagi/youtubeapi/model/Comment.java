@@ -12,8 +12,10 @@ public class Comment {
 
     @JsonTypeInfo(use=JsonTypeInfo.Id.NONE)
     @JsonIgnoreProperties(ignoreUnknown=true)
-    static class CommentSnippet {
+    public static class CommentSnippet {
         public String videoId;
+
+        public String parentId;
 
         public String textDisplay;
 
@@ -23,13 +25,14 @@ public class Comment {
 
         public String authorChannelUrl;
 
-        public boolean canRate;
-
-        public int likeCount;
-
         public Date publishedAt;
 
         public Date updatedAt;
+    }
+
+    public Comment() {
+        this.kind = "youtube#comment";
+        this.snippet = new CommentSnippet();
     }
 
     public String kind;
