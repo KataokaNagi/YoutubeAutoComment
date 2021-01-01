@@ -1,5 +1,6 @@
 package com.github.kataokanagi.youtubeapi;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kataokanagi.utils.Log;
@@ -57,8 +58,43 @@ public class API {
 
     // Youtube API: Reply to a comment
     public static Comment commentsInsert(String parentId, String commentText) throws IOException {
-        // TODO: Implement
-        return null;
+        JSONHttpRequest jhr;
+
+        if (Config.getHttpProxyEnabled()) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(Config.getHttpProxyHost(), Config.getHttpProxyPort()));
+            jhr = new JSONHttpRequest(proxy, "GET", YOUTUBE_V3_COMMENTS);
+        } else {
+            jhr = new JSONHttpRequest("GET", YOUTUBE_V3_COMMENTS);
+        }
+
+        Comment postComment = new Comment();
+        postComment.snippet.parentId = parentId;
+        postComment.snippet.textOriginal = commentText;
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String payload = mapper.writeValueAsString(postComment);
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("key", Config.getApiKey());
+        params.put("textFormat", "plainText");
+        params.put("part", "snippet");
+
+        // doRequest & getResponse could trigger IOException if network error happened
+        String response = jhr.setParams(params)
+                .setPayload(payload)
+                .doRequest()
+                .getResponse();
+
+        Comment comment = null;
+
+        try {
+            comment = mapper.readValue(response, Comment.class);
+        } catch (JsonProcessingException e) {
+            throw new IOException(e.getMessage());
+        }
+
+        return comment;
     }
 
 }
