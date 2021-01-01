@@ -5,10 +5,12 @@ import com.github.kataokanagi.utils.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class JSONHttpRequest {
@@ -99,6 +101,14 @@ public class JSONHttpRequest {
             }
 
             urlConnection.connect();
+
+            // Send post body
+            if (this.payload != null) {
+                try (OutputStream out = urlConnection.getOutputStream()) {
+                    byte[] input = this.payload.getBytes(StandardCharsets.UTF_8);
+                    out.write(input);
+                }
+            }
         } catch (IOException e) {
             Log.e(TAG, "doRequest() IOException: " + e.getMessage());
             throw e;
