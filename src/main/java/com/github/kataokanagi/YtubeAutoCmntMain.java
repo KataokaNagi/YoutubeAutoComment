@@ -1,5 +1,10 @@
 package com.github.kataokanagi;
 
+import com.github.kataokanagi.youtubeapi.API;
+import com.github.kataokanagi.youtubeapi.OAuthHelper;
+import com.google.api.client.auth.oauth2.Credential;
+
+import java.io.IOException;
 import java.util.*;
 
 public class YtubeAutoCmntMain {
@@ -17,7 +22,13 @@ public class YtubeAutoCmntMain {
   public YtubeAutoCmntMain() {
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
+    Credential credential = OAuthHelper.authorize();
+    String accessToken = credential.getAccessToken();
+
+    var list = API.commentThreadList(VIDEO_ID);
+    var comment = API.commentsInsert(credential, list.items[0].id, "test auto reply from code");
+
     YtubeAPICmnt yAPIC = new YtubeAPICmnt();
     List<String> cmntList = new ArrayList<String>();
     GetStrPstvLv getStPsLv = new GetStrPstvLv();
