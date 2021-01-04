@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kataokanagi.utils.Log;
 import com.github.kataokanagi.youtubeapi.model.Comment;
 import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
+import com.google.api.client.auth.oauth2.Credential;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -57,7 +58,7 @@ public class API {
     }
 
     // Youtube API: Reply to a comment
-    public static Comment commentsInsert(String parentId, String commentText) throws IOException {
+    public static Comment commentsInsert(Credential credential, String parentId, String commentText) throws IOException {
         JSONHttpRequest jhr;
 
         if (Config.getHttpProxyEnabled()) {
@@ -80,8 +81,13 @@ public class API {
         params.put("textFormat", "plainText");
         params.put("part", "snippet");
 
+        // Set OAuth2.0 authorization header (with access token)
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + credential.getAccessToken());
+
         // doRequest & getResponse could trigger IOException if network error happened
         String response = jhr.setParams(params)
+                .setHeaders(headers)
                 .setPayload(payload)
                 .doRequest()
                 .getResponse();
