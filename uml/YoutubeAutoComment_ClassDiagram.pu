@@ -2,12 +2,10 @@
 ' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
 ' @auther    AL18046 Kurihara Jin
 ' @auther    AL18036 Kataoka Nagi
-' @date      2020-12-17 01:59:08
-' $Version   1.1
-' $Revision  1.4
-' @par       追加点：#14 API o-- JSONHttpRequest（片岡）
-' @par       追加点：#15 API x-- Log （片岡）
-' @par       追加点：#15 API x-- Config （片岡）
+' @date      2021-01-05 04:32:26
+' $Version   1.2
+' $Revision  1.0
+' @par       追加点：変更点を追加
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
 
 @startuml out/ClassDiagram.png
@@ -26,6 +24,9 @@ package com.github.kataokanagi {
     package com.github.kataokanagi.youtubeapi.model {
     }
   }
+}
+
+package com.google.api.client {
 }
 
 package com.github.kataokanagi.utils {
@@ -49,16 +50,17 @@ package com.github.kataokanagi.youtubeapi.model {
         + etag: String
         + id: String
         + snippet: CommentSnippet
+
+        + Comment():0
     }
 
     class CommentSnippet {
         + videoId: String
+        + parentId: String
         + textDisplay: String
         + textOriginal: String
         + authorDisplayName: String
         + authorChannelUrl: String
-        + canRate: boolean
-        + likeCount: int
         + publishedAt: Date
         + updatedAt: Date
     }
@@ -99,7 +101,8 @@ package com.github.kataokanagi.youtubeapi {
         - {static} YOUTUBE_V3_COMMENTS: String = "https://www.googleapis.com/youtube/v3/comments"
 
         + {static} commentThreadList(videoId: String): CommentThreadListResponse
-        + {static} replyComment(videoId: String, comment: String): void
+        + {static} commentsInsert(credential: Credential, parentId: String, commentText: String): Comment
+        ' + {static} replyComment(videoId: String, comment: String): void ' 仮に追加していたもの（片岡）
     }
 
     class Config {
@@ -133,6 +136,16 @@ package com.github.kataokanagi.youtubeapi {
         + doRequest(): JSONHttpRequest
         + getResponse(): String
     }
+
+  class OAuthHelper {
+    - {static} TAG: final String
+    - {static} SCOPE_YOUTUBE: final String
+    - {static} CREDENTIALS_DIRECTORY: final String
+    - {static} HTTP_TRANSPORT: final HttpTransport
+    - {static} JSON_FACTORY: final JsonFactory
+
+    + {static} authorize(): Credential
+  }
 }
 
 package com.github.kataokanagi {
@@ -157,22 +170,25 @@ package com.github.kataokanagi {
     }
 }
 
-API o-- CommentThreadListResponse
 
 ' API o-- Log
 EmotionAnalyser x--> Log
 ReplyGenerator x--> Log
 JSONHttpRequest x--> Log
-
-
-
-API o-- JSONHttpRequest
+OAuthHelper x--> Log
 API x--> Log
+
+API o-- CommentThreadListResponse
+API o-- JSONHttpRequest
 API x--> Config
 
+YoutubeAutoComment x--> OAuthHelper
 YoutubeAutoComment x--> API
 YoutubeAutoComment x--> EmotionAnalyser
 YoutubeAutoComment x--> ReplyGenerator
 
+com.google.api.client +-- API
+com.google.api.client +-- YoutubeAutoComment
+com.google.api.client +-- OAuthHelper
 
 @enduml
