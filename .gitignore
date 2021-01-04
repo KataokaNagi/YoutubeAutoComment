@@ -20,11 +20,17 @@
 # *.iml
 # *.ipr
 
+# OAuth credentials
+.oauth-credentials/
+
 # CMake
 cmake-build-*/
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
+
+# target files
+target/
 
 # class file
 *.class
