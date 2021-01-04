@@ -28,6 +28,7 @@ actor User
 participant YoutubeAutoComment.java
 participant EmotionAnalyser.java
 participant ReplyGenerator.java
+participant AOuthHelper.java
 participant API.java
 participant MeCab
 participant PolarDictionary
@@ -60,6 +61,10 @@ EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCount: int,\n neg
 YoutubeAutoComment.java -> ReplyGenerator.java: generate(comment: String,\n positiveLevel: double): String
 activate ReplyGenerator.java
 deactivate ReplyGenerator.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> AOuthHelper.java: authorize()\nアプリ管理者が、任意のタイミングでブラウザからYoutubeの権限を認証
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
