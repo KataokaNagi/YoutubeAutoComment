@@ -62,7 +62,15 @@ public class OAuthHelper {
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
 
         // do authorization
-        return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+        Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+
+        // check if token time limit exceeded
+        if (System.currentTimeMillis() > credential.getExpirationTimeMilliseconds()) {
+            // refresh the token
+            credential.refreshToken();
+        }
+
+        return credential;
     }
 
 }
