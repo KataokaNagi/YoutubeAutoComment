@@ -95,9 +95,13 @@ public class JSONHttpRequest {
                 }
             }
 
+            byte[] payloadBuffer = null;
+
             if (this.payload != null) {
+                // Convert payload string to UTF-8 byte array
+                payloadBuffer = this.payload.getBytes(StandardCharsets.UTF_8);
                 urlConnection.setDoOutput(true);
-                urlConnection.setFixedLengthStreamingMode(this.payload.length());
+                urlConnection.setFixedLengthStreamingMode(payloadBuffer.length);
             }
 
             urlConnection.connect();
@@ -105,8 +109,9 @@ public class JSONHttpRequest {
             // Send post body
             if (this.payload != null) {
                 try (OutputStream out = urlConnection.getOutputStream()) {
-                    byte[] input = this.payload.getBytes(StandardCharsets.UTF_8);
-                    out.write(input);
+                    // Write UTF-8 byte array
+                    assert payloadBuffer != null;
+                    out.write(payloadBuffer);
                 }
             }
         } catch (IOException e) {
