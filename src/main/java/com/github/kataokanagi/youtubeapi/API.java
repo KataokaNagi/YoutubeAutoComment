@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kataokanagi.utils.Log;
 import com.github.kataokanagi.youtubeapi.model.Comment;
+import com.github.kataokanagi.youtubeapi.model.CommentListResponse;
 import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
 import com.google.api.client.auth.oauth2.Credential;
 
@@ -55,6 +56,43 @@ public class API {
         }
 
         return listResponse;
+    }
+
+    // Youtube API: Retrieve replies for a specified comment
+    public static CommentListResponse commentsList(String parentId) throws IOException {
+        JSONHttpRequest jhr;
+
+        if (Config.getHttpProxyEnabled()) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(Config.getHttpProxyHost(), Config.getHttpProxyPort()));
+            jhr = new JSONHttpRequest(proxy, "GET", YOUTUBE_V3_COMMENTS);
+        } else {
+            jhr = new JSONHttpRequest("GET", YOUTUBE_V3_COMMENTS);
+        }
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("key", Config.getApiKey());
+        params.put("textFormat", "plainText");
+        params.put("part", "snippet");
+        params.put("parentId", parentId);
+        params.put("maxResults", "100");
+
+        // doRequest & getResponse could trigger IOException if network error happened
+        String response = jhr.setParams(params)
+                .doRequest()
+                .getResponse();
+
+        // JSON deserialize
+        ObjectMapper mapper = new ObjectMapper();
+        CommentListResponse commentListResponse = null;
+
+        try {
+            commentListResponse = mapper.readValue(response, CommentListResponse.class);
+        } catch (JsonProcessingException e) {
+            // If data is corrupted
+            throw new IOException(e.getMessage());
+        }
+
+        return commentListResponse;
     }
 
     // Youtube API: Reply to a comment
