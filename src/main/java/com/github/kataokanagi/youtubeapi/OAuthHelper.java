@@ -25,6 +25,7 @@ public class OAuthHelper {
     private static final String TAG = "OAuthHelper";
 
     private static final String SCOPE_YOUTUBE = "https://www.googleapis.com/auth/youtube.force-ssl";
+    private static final String SCOPE_USERINFO_PROFILE = "https://www.googleapis.com/auth/userinfo.profile";
     private static final String CREDENTIALS_DIRECTORY = ".oauth-credentials";
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -50,6 +51,7 @@ public class OAuthHelper {
         // oauth scope: youtube.force-ssl
         List<String> scopes = new ArrayList<>();
         scopes.add(SCOPE_YOUTUBE);
+        scopes.add(SCOPE_USERINFO_PROFILE);
 
         // setup authorization code flow
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(

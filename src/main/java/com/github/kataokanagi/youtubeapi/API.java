@@ -7,6 +7,7 @@ import com.github.kataokanagi.utils.Log;
 import com.github.kataokanagi.youtubeapi.model.Comment;
 import com.github.kataokanagi.youtubeapi.model.CommentListResponse;
 import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
+import com.github.kataokanagi.youtubeapi.model.UserInfoPlus;
 import com.google.api.client.auth.oauth2.Credential;
 
 import java.io.IOException;
@@ -18,8 +19,48 @@ public class API {
 
     private static final String TAG = "API";
 
+    private static final String GOOGLE_OAUTH_USERINFO_ME = "https://www.googleapis.com/userinfo/v2/me";
     private static final String YOUTUBE_V3_COMMENTTHREADS = "https://www.googleapis.com/youtube/v3/commentThreads";
     private static final String YOUTUBE_V3_COMMENTS = "https://www.googleapis.com/youtube/v3/comments";
+
+    public static UserInfoPlus userInfoMe(Credential credential) throws IOException {
+        JSONHttpRequest jhr;
+
+        if (Config.getHttpProxyEnabled()) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(Config.getHttpProxyHost(), Config.getHttpProxyPort()));
+            jhr = new JSONHttpRequest(proxy, "GET", GOOGLE_OAUTH_USERINFO_ME);
+        } else {
+            jhr = new JSONHttpRequest("GET", GOOGLE_OAUTH_USERINFO_ME);
+        }
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("key", Config.getApiKey());
+        params.put("alt", "json");
+        params.put("prettyPrint", "true");
+
+        // Set OAuth2.0 authorization header (with access token)
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + credential.getAccessToken());
+
+        // doRequest & getResponse could trigger IOException if network error happened
+        String response = jhr.setParams(params)
+                .setHeaders(headers)
+                .doRequest()
+                .getResponse();
+
+        // JSON deserialize to UserInfoPlus
+        ObjectMapper mapper = new ObjectMapper();
+        UserInfoPlus user = null;
+
+        try {
+            user = mapper.readValue(response, UserInfoPlus.class);
+        } catch (JsonProcessingException e) {
+            // If data is corrupted
+            throw new IOException(e.getMessage());
+        }
+
+        return user;
+    }
 
     // Youtube API: Get a youtube comment thread which contains comment list
     public static CommentThreadListResponse commentThreadList(String videoId) throws IOException {
