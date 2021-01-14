@@ -2,7 +2,11 @@ package com.github.kataokanagi.youtubeapi;
 
 public class Config {
 
+    /**************************************************/
+    // Put API key by hand after making branch
+    // and put away before PR
     private static final String API_KEY = "";
+    /**************************************************/
 
     private static boolean enableHttpProxy = false;
     private static String httpProxyHost;
