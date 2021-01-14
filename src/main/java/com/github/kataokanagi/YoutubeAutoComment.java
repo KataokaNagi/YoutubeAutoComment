@@ -4,6 +4,7 @@ import com.github.kataokanagi.utils.Log;
 import com.github.kataokanagi.youtubeapi.API;
 import com.github.kataokanagi.youtubeapi.OAuthHelper;
 import com.github.kataokanagi.youtubeapi.model.Comment;
+import com.github.kataokanagi.youtubeapi.model.CommentListResponse;
 import com.github.kataokanagi.youtubeapi.model.CommentThread;
 import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
 import com.google.api.client.auth.oauth2.Credential;
@@ -14,6 +15,7 @@ import java.util.*;
 public class YoutubeAutoComment {
 
     static final String VIDEO_ID = ""; // ! After "watch?v=" in video URL
+    private static final String AUTHOR_USER_NAME = "Nagi";
 
     public YoutubeAutoComment() {
     }
@@ -31,14 +33,27 @@ public class YoutubeAutoComment {
                     CommentThreadListResponse list = API.commentThreadList(VIDEO_ID);
 
                     for (CommentThread ct : list.items) {
-                        Date publishedDate = ct.snippet.topLevelComment.snippet.publishedAt;
+                        Comment comment = ct.snippet.topLevelComment;
+                        CommentListResponse replyList = API.commentsList(comment.id);
 
-                        String comment = ct.snippet.topLevelComment.snippet.textOriginal;
+                        boolean replied = false;
 
-                        String result = replyGenerator.generate(comment);
+                        for (Comment reply : replyList.items) {
+                            // 既に返信済みかを判断
+                            if (reply.snippet.authorDisplayName == AUTHOR_USER_NAME) {
+                                replied = true;
+                                break;
+                            }
+                        }
+
+                        if (replied) {
+                            continue;
+                        }
+
+                        String commentText = comment.snippet.textOriginal;
+                        String result = replyGenerator.generate(commentText);
 
                         Comment insertComment = API.commentsInsert(credential, ct.id, result);
-
                     }
 
                 } catch (IOException e) {
