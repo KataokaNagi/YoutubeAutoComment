@@ -1,6 +1,7 @@
 package com.github.kataokanagi;
 
 import com.github.kataokanagi.utils.Log;
+import com.github.kataokanagi.GetStrPstvLv;
 
 public class ReplyGenerator {
 
@@ -10,8 +11,11 @@ public class ReplyGenerator {
 
     }
 
-    public String generate(String comment, double positiveLevel) {
+    public String generate(String comment) {
+        GetStrPstvLv getStrPstvLv = new GetStrPstvLv();
         String reply;
+        double positiveLevel = getStrPstvLv.getLv(comment);
+
 
         if (positiveLevel == 1.0) {  // positiveLevel \in [-1,1]
             reply = "すっごーい！";

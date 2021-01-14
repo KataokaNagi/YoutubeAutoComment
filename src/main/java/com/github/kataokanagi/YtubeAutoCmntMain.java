@@ -27,9 +27,7 @@ public class YtubeAutoCmntMain {
     String accessToken = credential.getAccessToken();
 
     var list = API.commentThreadList(VIDEO_ID);
-    var comment = API.commentsInsert(credential, list.items[0].id, "日本語返信テスト2");
-
-    var replyList = API.commentsList(list.items[0].id);
+    var comment = API.commentsInsert(credential, list.items[0].id, "test auto reply from code");
 
     YtubeAPICmnt yAPIC = new YtubeAPICmnt();
     List<String> cmntList = new ArrayList<String>();

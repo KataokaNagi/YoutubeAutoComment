@@ -10,7 +10,7 @@ public class CommentThread {
 
     @JsonTypeInfo(use=JsonTypeInfo.Id.NONE)
     @JsonIgnoreProperties(ignoreUnknown=true)
-    static class CommentThreadSnippet {
+    public static class CommentThreadSnippet {
         public String videoId;
 
         public Comment topLevelComment;
