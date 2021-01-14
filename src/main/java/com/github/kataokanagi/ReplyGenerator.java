@@ -6,13 +6,13 @@ import com.github.kataokanagi.GetStrPstvLv;
 public class ReplyGenerator {
 
     private static final String TAG = "ReplyGenerator";
+    private GetStrPstvLv getStrPstvLv;
 
     public ReplyGenerator() {
-
+        getStrPstvLv = new GetStrPstvLv();
     }
 
     public String generate(String comment) {
-        GetStrPstvLv getStrPstvLv = new GetStrPstvLv();
         String reply;
         double positiveLevel = getStrPstvLv.getLv(comment);
 
