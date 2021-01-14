@@ -3,10 +3,7 @@ package com.github.kataokanagi;
 import com.github.kataokanagi.utils.Log;
 import com.github.kataokanagi.youtubeapi.API;
 import com.github.kataokanagi.youtubeapi.OAuthHelper;
-import com.github.kataokanagi.youtubeapi.model.Comment;
-import com.github.kataokanagi.youtubeapi.model.CommentListResponse;
-import com.github.kataokanagi.youtubeapi.model.CommentThread;
-import com.github.kataokanagi.youtubeapi.model.CommentThreadListResponse;
+import com.github.kataokanagi.youtubeapi.model.*;
 import com.google.api.client.auth.oauth2.Credential;
 
 import java.io.IOException;
@@ -15,7 +12,6 @@ import java.util.*;
 public class YoutubeAutoComment {
 
     static final String VIDEO_ID = ""; // ! After "watch?v=" in video URL
-    private static final String AUTHOR_USER_NAME = "Nagi";
 
     public YoutubeAutoComment() {
     }
@@ -23,6 +19,8 @@ public class YoutubeAutoComment {
     public static void main(String[] args) throws IOException {
         Credential credential = OAuthHelper.authorize();
         ReplyGenerator replyGenerator = new ReplyGenerator();
+
+        UserInfoPlus userinfo = API.userInfoMe(credential);
 
         Timer timer = new Timer();
 
@@ -40,7 +38,7 @@ public class YoutubeAutoComment {
 
                         for (Comment reply : replyList.items) {
                             // 既に返信済みかを判断
-                            if (reply.snippet.authorDisplayName == AUTHOR_USER_NAME) {
+                            if (reply.snippet.authorDisplayName.equals(userinfo.name)) {
                                 replied = true;
                                 break;
                             }
