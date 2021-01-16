@@ -17,6 +17,7 @@ skinparam classAttributeIconSize 0
 ' class def
 ' @see https://qiita.com/KeithYokoma/items/ee21fec6a3ebb5d1e9a8
 
+
 package com.github.kataokanagi {
   package com.github.kataokanagi.utils {
   }
