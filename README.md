@@ -16,10 +16,10 @@ This system provide the following utility of Youtube
 - Get your API key on [Google Developer Console](https://console.developers.google.com/?hl=JA)
 - Check your client_id and client_secret corresponded to your API key on [Google Developer Console](https://console.developers.google.com/?hl=JA)
 - Check video id (After "watch?v=" of the video URL)
-- Update `API_KEY` on `src/main/java/com/github/kataokanagi/YtubeAutoCmntMain.java`
-- Update `VIDEO_ID` on `src/main/java/com/github/kataokanagi/YtubeAutoCmntMain.java`
+- Update `API_KEY` on `src/main/java/com/github/kataokanagi/youtubeapi/Config.java`
+- Update `VIDEO_ID` on `src/main/java/com/github/kataokanagi/YoutubeAutoComment.java`
 - Update `client_id` and `client_secret` on `src/main/resources/client_secrets.json`
-- Run `src/main/java/com/github/kataokanagi/YtubeAutoCmntMain.java`
+- Run `src/main/java/com/github/kataokanagi/YoutubeAutoComment.java`
 - Permit the rights of Youtube on your browser
   2021/01/07 updated
 
