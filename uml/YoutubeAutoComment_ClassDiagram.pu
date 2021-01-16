@@ -2,7 +2,7 @@
 ' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
 ' @auther    AL18046 Kurihara Jin
 ' @auther    AL18036 Kataoka Nagi
-' @date      2021-01-05 04:32:26
+' @date      2021-01-16 16:42:00
 ' $Version   1.2
 ' $Revision  1.0
 ' @par       追加点：変更点を追加
@@ -16,7 +16,6 @@ skinparam classAttributeIconSize 0
 
 ' class def
 ' @see https://qiita.com/KeithYokoma/items/ee21fec6a3ebb5d1e9a8
-
 
 package com.github.kataokanagi {
   package com.github.kataokanagi.utils {
@@ -52,7 +51,7 @@ package com.github.kataokanagi.youtubeapi.model {
         + id: String
         + snippet: CommentSnippet
 
-        + Comment():0
+        + Comment()
     }
 
     class CommentSnippet {
@@ -93,14 +92,22 @@ package com.github.kataokanagi.youtubeapi.model {
 
     CommentThreadListResponse o-- CommentThread
     CommentThread o-- Comment
+
+    class UserInfoPlus {
+        + id: String
+        + name: String
+        + picture: String
+    }
 }
 
 package com.github.kataokanagi.youtubeapi {
     class API {
         - {static} TAG: String = "API"
+        - {static} GOOGLE_OAUTH_USERINFO_ME: String = "https://www.googleapis.com/userinfo/v2/me"
         - {static} YOUTUBE_V3_COMMENTTHREADS: String = "https://www.googleapis.com/youtube/v3/commentThreads"
         - {static} YOUTUBE_V3_COMMENTS: String = "https://www.googleapis.com/youtube/v3/comments"
 
+        + {static} userInfoMe(credential: Credential): UserInfoPlus
         + {static} commentThreadList(videoId: String): CommentThreadListResponse
         + {static} commentsInsert(credential: Credential, parentId: String, commentText: String): Comment
         ' + {static} replyComment(videoId: String, comment: String): void ' 仮に追加していたもの（片岡）
@@ -116,6 +123,7 @@ package com.github.kataokanagi.youtubeapi {
         + {static} setHttpProxyEnabled(enabled: boolean): void
         + {static} setHttpProxyServer(host: String, port: int): void
         + {static} getHttpProxyHost(): String
+        + {static} getHttpProxyPort(): int
         + {static} getApiKey(): String
     }
 
@@ -139,11 +147,12 @@ package com.github.kataokanagi.youtubeapi {
     }
 
   class OAuthHelper {
-    - {static} TAG: final String
-    - {static} SCOPE_YOUTUBE: final String
-    - {static} CREDENTIALS_DIRECTORY: final String
-    - {static} HTTP_TRANSPORT: final HttpTransport
-    - {static} JSON_FACTORY: final JsonFactory
+    - {static} TAG: String = "OAuthHelper"
+    - {static} SCOPE_YOUTUBE: String = "https://www.googleapis.com/auth/youtube.force-ssl"
+    - {static} SCOPE_USERINFO_PROFILE: String = "https://www.googleapis.com/auth/userinfo.profile"
+    - {static} CREDENTIALS_DERECTORY = ".oauth-credentials"
+    - {static} HTTP_TRANSPORT: HttpTransport
+    - {static} JSON_FACTORY: JsonFactory
 
     + {static} authorize(): Credential
   }
@@ -165,9 +174,10 @@ package com.github.kataokanagi {
 
     class ReplyGenerator {
         - {static} TAG: String = "ReplyGenerator"
+        - getStrPstvLv: GetStrPstvLv
 
         + ReplyGenerator()
-        + generate(comment: String, positiveLevel: double): String
+        + generate(comment: String): String
     }
 }
 
@@ -180,6 +190,7 @@ OAuthHelper x--> Log
 API x--> Log
 
 API o-- CommentThreadListResponse
+API o-- UserInfoPlus
 API o-- JSONHttpRequest
 API x--> Config
 
