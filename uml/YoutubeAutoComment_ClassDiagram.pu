@@ -2,8 +2,8 @@
 ' @brief     高度情報演習2B プロジェクト計画書のクラス図の出力用ファイル
 ' @auther    AL18046 Kurihara Jin
 ' @auther    AL18036 Kataoka Nagi
-' @date      2021-01-16 16:42:00
-' $Version   1.2
+' @date      2021-01-16 17:40:00
+' $Version   1.3
 ' $Revision  1.0
 ' @par       追加点：変更点を追加
 ' @see       https://qiita.com/opengl-8080/items/98c510b8ca060bdd2ea3
@@ -191,13 +191,13 @@ API x--> Log
 
 API o-- CommentThreadListResponse
 API o-- UserInfoPlus
-API o-- JSONHttpRequest
-API x--> Config
+API o-- Config
+API x--> JSONHttpRequest
 
 YoutubeAutoComment x--> OAuthHelper
 YoutubeAutoComment x--> API
-YoutubeAutoComment x--> EmotionAnalyser
 YoutubeAutoComment x--> ReplyGenerator
+ReplyGenerator x--> EmotionAnalyser
 
 com.google.api.client +-- API
 com.google.api.client +-- YoutubeAutoComment
