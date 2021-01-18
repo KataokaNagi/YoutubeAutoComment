@@ -29,6 +29,11 @@ package com.github.kataokanagi {
 package com.google.api.client {
 }
 
+package java.util {
+  ' class Timer{}
+  class TimerTask{}
+}
+
 package com.github.kataokanagi.utils {
     class Log {
         - {static} ENABLE_DEBUG: boolean = true
@@ -109,6 +114,7 @@ package com.github.kataokanagi.youtubeapi {
 
         + {static} userInfoMe(credential: Credential): UserInfoPlus
         + {static} commentThreadList(videoId: String): CommentThreadListResponse
+        + {static} commentsList(parentId: String): CommentListResponse
         + {static} commentsInsert(credential: Credential, parentId: String, commentText: String): Comment
         ' + {static} replyComment(videoId: String, comment: String): void ' 仮に追加していたもの（片岡）
     }
@@ -198,6 +204,8 @@ API x--> JSONHttpRequest
 YoutubeAutoComment x--> OAuthHelper
 YoutubeAutoComment x--> API
 YoutubeAutoComment x--> ReplyGenerator
+YoutubeAutoComment --+ java.util
+
 ReplyGenerator x--> EmotionAnalyser
 
 com.google.api.client +-- API

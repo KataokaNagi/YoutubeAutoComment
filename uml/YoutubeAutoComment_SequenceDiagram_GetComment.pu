@@ -26,7 +26,10 @@ end title
 
 actor User
 participant YoutubeAutoComment.java
+participant OAuthHelper.java
 participant API.java
+' participant Timer.java
+participant TimerTask.java
 participant JSONHttpRequest.java
 participant Config.java
 ' 冗長？
@@ -44,14 +47,24 @@ User -> User: Comment on Youtube
 deactivate User
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
-' activate YoutubeAutoComment.java
-YoutubeAutoComment.java -> YoutubeAutoComment.java: Every 2 min.
-' deactivate YoutubeAutoComment.java
+
+YoutubeAutoComment.java -> OAuthHelper.java: authorize(): Credential
+activate OAuthHelper.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> API.java: userInfoMe(Credential: credential): UserInfoPlus
+activate API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> TimerTask.java: run()
+' activate Timer.java
+activate TimerTask.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
 YoutubeAutoComment.java -> API.java: commentThreadList(videoId: String)\n: CommentThreadListResponse
-activate API.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -81,10 +94,28 @@ deactivate Config.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-API.java -> JSONHttpRequest.java: setParams(params: Map<String, String>)\n: JSONHttpRequest
+API.java -> JSONHttpRequest.java: setParams(params: Map<String, String>): JSONHttpRequest
 API.java -> JSONHttpRequest.java: doRequest(): JSONHttpRequest
 API.java -> JSONHttpRequest.java: getResponse(): String
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> API.java: get commentThread.snippet.topLevelComment
+YoutubeAutoComment.java -> API.java: commentsList(parentId: String): CommentListResponse
+YoutubeAutoComment.java -> API.java: reply.snippet.authorDisplayName.equals(userInfoName: String)
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+group opt [!replyed]
+YoutubeAutoComment.java -> API.java: get comment.snippet.textOriginal
+' YoutubeAutoComment.java -> ReplyGenerator.java: generate(comment: String)
+end
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' YoutubeAutoComment.java -> Timer.java: scheduleAtFixedRate(Runnable command, long initialDelay, long period)
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
 
 @enduml

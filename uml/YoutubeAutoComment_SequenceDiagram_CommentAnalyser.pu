@@ -26,16 +26,22 @@ end title
 
 actor User
 participant YoutubeAutoComment.java
-participant EmotionAnalyser.java
 participant ReplyGenerator.java
+participant EmotionAnalyser.java
 participant AOuthHelper.java
-participant API.java
 participant MeCab
 participant PolarDictionary
+participant Timer.java
+participant API.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 activate YoutubeAutoComment.java
-YoutubeAutoComment.java -> EmotionAnalyser.java: EmotionAnalyser()
+YoutubeAutoComment.java -> ReplyGenerator.java: ReplyGenerator()
+activate ReplyGenerator.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+ReplyGenerator.java -> EmotionAnalyser.java: EmotionAnalyser()
 activate EmotionAnalyser.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -47,30 +53,38 @@ deactivate MeCab
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-EmotionAnalyser.java -> PolarDictionary: File(POLAR_DICTIONARY_PATH)
+EmotionAnalyser.java -> PolarDictionary: positiveLevelMap.put\n(String: wordPolarInfo[0].trim(), int: wordPositiveLevel)
 activate PolarDictionary
 deactivate PolarDictionary
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-YoutubeAutoComment.java -> EmotionAnalyser.java: getPositiveLevel(comment: String): double
-EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCnt: int,\n negativeCnt: int): double
+YoutubeAutoComment.java -> Timer.java: Timer()
+activate Timer.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
 YoutubeAutoComment.java -> ReplyGenerator.java: generate(comment: String,\n positiveLevel: double): String
-activate ReplyGenerator.java
-deactivate ReplyGenerator.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-YoutubeAutoComment.java -> AOuthHelper.java: authorize()\nアプリ管理者が、任意のタイミングでブラウザからYoutubeの権限を認証
+ReplyGenerator.java -> EmotionAnalyser.java: getPositiveLevel(comment: String): double
+EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCnt: int,\n negativeCnt: int): double
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' YoutubeAutoComment.java -> AOuthHelper.java: authorize()\nアプリ管理者が、任意のタイミングでブラウザからYoutubeの権限を認証
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
 YoutubeAutoComment.java -> API.java:  commentsInsert(credential: Credential, parentId: String, commentText: String): Comment
 activate API.java
 deactivate API.java
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+YoutubeAutoComment.java -> Timer.java: scheduleAtFixedRate(Runnable command, long initialDelay, long period)
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
