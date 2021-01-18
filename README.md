@@ -55,4 +55,4 @@ http://www.youtube.com/watch?v=F6Z8OWJD5IE
 ### Scequence Diagram (Analyse & Send Comment)
 
 2021/01/19 updated  
-![SequenceDiagram_CommentAnalyser](https://user-images.githubusercontent.com/45355440/104935151-39b23180-59ee-11eb-9682-f21ccf0efef5.png)
+![SequenceDiagram_CommentAnalyser](https://user-images.githubusercontent.com/45355440/104939264-8fd5a380-59f3-11eb-9ae0-e76bc652966c.png)
