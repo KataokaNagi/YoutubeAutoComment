@@ -28,7 +28,7 @@ actor User
 participant YoutubeAutoComment.java
 participant ReplyGenerator.java
 participant EmotionAnalyser.java
-participant AOuthHelper.java
+' participant AOuthHelper.java
 participant MeCab
 participant PolarDictionary
 participant Timer.java
