@@ -164,17 +164,18 @@ package com.github.kataokanagi {
 
     class EmotionAnalyser {
         - {static} TAG: String = "EmotionAnalyser"
-        - sentiMap: Map<String, String> = new HashMap<>()
+        - POLAR_DICTIONARY_PATH: final String = "pn.csv.m3.120408.trim"
+        - positiveLevelMap: Map<String, Integer> = new HashMap<>()
 
-        + EmotionAnalyser(dictionaryPath: String)
+        + EmotionAnalyser()
         + getPositiveLevel(comment: String): double
         - getCommentSurfaceList(): List<String>
-        - evalFunc(positiveCount: int, negativeCount: int): double
+        - evalFunc(positiveCnt: int, negativeCnt: int): double
     }
 
     class ReplyGenerator {
         - {static} TAG: String = "ReplyGenerator"
-        - getStrPstvLv: GetStrPstvLv
+        - emotionAnalyser: EmotionAnalyser
 
         + ReplyGenerator()
         + generate(comment: String): String

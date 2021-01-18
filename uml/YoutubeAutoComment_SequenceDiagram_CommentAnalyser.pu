@@ -35,7 +35,7 @@ participant PolarDictionary
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 activate YoutubeAutoComment.java
-YoutubeAutoComment.java -> EmotionAnalyser.java: EmotionAnalyser(dictionaryPath: String)
+YoutubeAutoComment.java -> EmotionAnalyser.java: EmotionAnalyser()
 activate EmotionAnalyser.java
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -47,14 +47,14 @@ deactivate MeCab
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-EmotionAnalyser.java -> PolarDictionary: File(dictionaryPath: String)
+EmotionAnalyser.java -> PolarDictionary: File(POLAR_DICTIONARY_PATH)
 activate PolarDictionary
 deactivate PolarDictionary
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
 YoutubeAutoComment.java -> EmotionAnalyser.java: getPositiveLevel(comment: String): double
-EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCount: int,\n negativeCount: int): double
+EmotionAnalyser.java -> EmotionAnalyser.java: evalFunc(positiveCnt: int,\n negativeCnt: int): double
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
